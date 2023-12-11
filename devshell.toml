@@ -1,0 +1,65 @@
+[[env]]
+name = "REPO_ROOT"
+eval = "$(git rev-parse --show-toplevel)"
+
+[[env]]
+name = "QMK_HOME"
+eval = "$REPO_ROOT/__qmk__"
+
+[[env]]
+name = "KEYBALL_HOME"
+eval = "$REPO_ROOT/__keyball__"
+
+[[env]]
+name = "QMK_VERSION"
+value = "0.22.3"
+
+[[env]]
+name = "KEYBALL_VERSION"
+value = "a09a28133cc6d4bd0e2d7bff889c7bb1238938b8"
+
+[[commands]]
+package = "qmk"
+
+[[commands]]
+name = "setup"
+help = "Setup build dependencies"
+command = '''
+rm -rf "$KEYBALL_HOME"
+git clone https://github.com/Yowkees/keyball.git "$KEYBALL_HOME"
+git -C "$KEYBALL_HOME" switch --detach "$KEYBALL_VERSION"
+
+qmk setup -b "$QMK_VERSION" -y
+
+ln -sf -T "$REPO_ROOT/keyball44" "$KEYBALL_HOME/qmk_firmware/keyboards/keyball/keyball44/keymaps/misawa"
+ln -sf -T "$KEYBALL_HOME/qmk_firmware/keyboards/keyball" "$QMK_HOME/keyboards/keyball"
+'''
+
+[[commands]]
+name = "clean"
+help = "Cleanup build dependencies"
+command = '''
+rm -rf "$KEYBALL_HOME"
+rm -rf "$QMK_HOME"
+'''
+
+[[commands]]
+name = "compile"
+help = "Compile firmware"
+command = '''
+qmk compile -j 4 -kb keyball/keyball44 -km misawa
+'''
+
+[[commands]]
+name = "flash"
+help = "Flash firmware"
+command = '''
+qmk flash -kb keyball/keyball44 -km misawa
+'''
+
+[[commands]]
+name = "format"
+help = "Fomrat my firmware files"
+command = '''
+clang-format "-style=file:$QMK_HOME/.clang-format" -i "$REPO_ROOT/keyball44/"*.{c,h}
+'''

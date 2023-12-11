@@ -1,0 +1,15 @@
+#pragma once
+
+#define TAP_CODE_DELAY 5
+
+// More layers
+#define DYNAMIC_KEYMAP_LAYER_COUNT 8
+
+// #define TAPPING_TERM 200
+// #define PERMISSIVE_HOLD
+// #define IGNORE_MOD_TAP_INTERRUPT
+// #define TAPPING_FORCE_HOLD
+// #define RETRO_TAPPING
+
+#define PRECISION_MODE_CPI 300
+#define PRECISION_MODE_SCROLL_DIV 7
