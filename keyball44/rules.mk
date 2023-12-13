@@ -3,3 +3,6 @@ OLED_ENABLE = no
 VIA_ENABLE = yes
 MOUSEKEY_ENABLE = yes
 EXTRAKEY_ENABLE = yes
+TAP_DANCE_ENABLE = yes
+
+SRC += key_layer_dance.c

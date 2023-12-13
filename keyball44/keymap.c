@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 
 #include "quantum.h"
+#include "key_layer_dance.h"
 
 enum layers {
     LAYER_WORKMAN,
@@ -12,6 +13,9 @@ enum layers {
 };
 enum user_keycodes {
     MO_PREC = QK_USER_0, // Momentarily enter precision mode
+};
+enum tap_dances {
+    TD_BROWSE_HENK, // Tap: HENK, Double tap: TG(LAYER_BROWSE), Hold: MO(LAYER_BROWSE).
 };
 
 #define OOOOOOO KC_TRNS
@@ -37,7 +41,12 @@ enum user_keycodes {
 
 #define LOWERSPC LT(LAYER_LOWER, KC_SPC)
 #define RAISEENT LT(LAYER_UPPER, KC_ENT)
-#define BRWSHNK LT(LAYER_BROWSE, KC_HENK)
+#define BRWSHNK TD(TD_BROWSE_HENK)
+#define TTBRWS TT(LAYER_BROWSE)
+
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_BROWSE_HENK] = ACTION_TAP_DANCE_KEY_LAYER(KC_HENK, KC_NO, LAYER_BROWSE),
+};
 
 // clang-format off
 const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_COLS] = {
@@ -59,7 +68,7 @@ const uint16_t PROGMEM keymaps[DYNAMIC_KEYMAP_LAYER_COUNT][MATRIX_ROWS][MATRIX_C
     OOOOOOO  , XXXXXXX  , XXXXXXX  , XXXXXXX  , XXXXXXX  , XXXXXXX  ,                                        KC_WFWD  , XXXXXXX  , SCRL_MO  , MO_PREC  , KC_VOLD  , KC_VOLU  ,
     OOOOOOO  , XXXXXXX  , XXXXXXX  , XXXXXXX  , XXXXXXX  , XXXXXXX  ,                                        KC_WBAK  , KC_BTN1  , KC_BTN3  , KC_BTN2  , KC_MUTE  , TG_BRWS  ,
     OOOOOOO  , XXXXXXX  , XXXXXXX  , XXXXXXX  , XXXXXXX  , XXXXXXX  ,                                        KC_WREF  , XXXXXXX  , XXXXXXX  , XXXXXXX  , XXXXXXX  , OOOOOOO  ,
-                          XXXXXXX  , XXXXXXX       , XXXXXXX  , OOOOOOO  , XXXXXXX  ,                   XXXXXXX  , OOOOOOO  ,                            XXXXXXX
+                          XXXXXXX  , XXXXXXX       , XXXXXXX  , OOOOOOO  , XXXXXXX  ,                   XXXXXXX  , OOOOOOO  ,                            BRWSHNK
   ),
 
   [LAYER_LOWER] = LAYOUT_right_ball(
@@ -89,7 +98,7 @@ layer_state_t layer_state_set_user(const layer_state_t state) {
     return update_tri_layer_state(state, LAYER_LOWER, LAYER_UPPER, LAYER_ADJUST);
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t* const record) {
+bool process_record_user(uint16_t keycode, keyrecord_t *const record) {
     // strip QK_MODS part.
     if (keycode >= QK_MODS && keycode <= QK_MODS_MAX) {
         keycode &= 0xff;
