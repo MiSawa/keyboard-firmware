@@ -8,20 +8,27 @@ void tap_dance_key_layer_finished(tap_dance_state_t *const state, void *const us
     dance_data->should_leave_layer             = false;
     const bool is_tap                          = state->interrupted || !state->pressed;
     const bool in_layer                        = layer_state_is(dance_data->layer);
-    if (is_tap && state->count == 1) {
-        // single tap
-        const uint16_t key = in_layer ? dance_data->key_on_layer : dance_data->key_off_layer;
-        if (key != KC_NO) {
-            register_code16(key);
-            dance_data->key_to_unregister = key;
+    if (is_tap) {
+        if (state->count == 1) {
+            // single tap
+            const uint16_t key = in_layer ? dance_data->key_on_layer : dance_data->key_off_layer;
+            if (key != KC_NO) {
+                register_code16(key);
+                dance_data->key_to_unregister = key;
+            }
+        } else if (state->count == 2) {
+            // double tap
+            layer_on(dance_data->layer);
+        } else {
+            // triple tap or more
+            layer_off(dance_data->layer);
         }
-    } else if (is_tap) {
-        // tap more than once
-        layer_invert(dance_data->layer);
-    } else if (!in_layer) {
+    } else {
         // hold
-        layer_on(dance_data->layer);
-        dance_data->should_leave_layer = true;
+        if (!in_layer) {
+            layer_on(dance_data->layer);
+            dance_data->should_leave_layer = true;
+        }
     }
 }
 

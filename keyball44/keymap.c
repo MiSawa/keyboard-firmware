@@ -15,7 +15,9 @@ enum user_keycodes {
     MO_PREC = QK_USER_0, // Momentarily enter precision mode
 };
 enum tap_dances {
-    TD_BROWSE_HENK, // Tap: HENK, Double tap: TG(LAYER_BROWSE), Hold: MO(LAYER_BROWSE).
+    // Tap: HENK, Hold: MO(LAYER_BROWSE).
+    // Double tap: turn on LAYER_BROWSE, Triple tap: turn on LAYER_BROWSE
+    TD_BROWSE_HENK,
 };
 
 #define OOOOOOO KC_TRNS
